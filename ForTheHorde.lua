@@ -15,6 +15,7 @@ local triggers = {
   { trigger = GetSpellInfo(178207), var_name = 'drums_of_fury',         opt_name = "DrumsOfFury",        gv = 'FTH_DOF', default = 1 },
   { trigger = GetSpellInfo(230935), var_name = 'drums_of_the_mountain', opt_name = "DrumsOfTheMountain", gv = 'FTH_DOM', default = 1 },
   { trigger = GetSpellInfo(32182),  var_name = 'heroism',               opt_name = "Heroism",            gv = 'FTH_H',   default = 1 },
+  { trigger = GetSpellInfo(160452), var_name = 'netherwinds',           opt_name = "Netherwinds",        gv = 'FTH_NW',  default = 1 },
   { trigger = GetSpellInfo(80353),  var_name = 'time_warp',             opt_name = "TimeWarp",           gv = 'FTH_TW',  default = 1 },
 };
 
