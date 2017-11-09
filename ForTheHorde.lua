@@ -54,11 +54,12 @@ end
 -- Register events that we listen for
 ForTheHorde.gvif:RegisterEvent("ADDON_LOADED");
 ForTheHorde.gvif:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+ForTheHorde.gvif:RegisterEvent("PLAYER_ENTERING_WORLD");
 ForTheHorde.gvif:RegisterEvent("PLAYER_LOGOUT");
 
 function ForTheHorde.gvif:OnEvent( event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13 ) 
   if ( event == "COMBAT_LOG_EVENT_UNFILTERED" ) then
-    if ( arg2 ~= nil and arg2 == "SPELL_AURA_APPLIED" and arg13 ~= nil ) then
+    if ( arg8 ~= nil and arg8 == ForTheHorde["playerGuid"] and arg2 ~= nil and arg2 == "SPELL_AURA_APPLIED" and arg13 ~= nil ) then
       for _,trigger_table in ipairs(triggers) do
         if ( arg13 == trigger_table["trigger"] and ForTheHorde['sound_on_' .. trigger_table["var_name"]] == 1 ) then
           PlaySoundFile( "Interface\\AddOns\\ForTheHorde\\bloodlust.mp3" );
@@ -81,6 +82,8 @@ function ForTheHorde.gvif:OnEvent( event, arg1, arg2, arg3, arg4, arg5, arg6, ar
         y = y - 30;
       end
     end
+  elseif event == "PLAYER_ENTERING_WORLD" then
+    ForTheHorde["playerGuid"] = UnitGUID("player"); -- Get the player's GUID for comparison
   elseif event == "PLAYER_LOGOUT" then
     for _,trigger_table in ipairs(triggers) do
       _G[trigger_table["gv"]] = ForTheHorde['sound_on_' .. trigger_table["var_name"]];
