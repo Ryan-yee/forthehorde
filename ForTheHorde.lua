@@ -62,7 +62,25 @@ function ForTheHorde.gvif:OnEvent( event, arg1, arg2, arg3, arg4, arg5, arg6, ar
     if ( arg8 ~= nil and arg8 == ForTheHorde["playerGuid"] and arg2 ~= nil and arg2 == "SPELL_AURA_APPLIED" and arg13 ~= nil ) then
       for _,trigger_table in ipairs(triggers) do
         if ( arg13 == trigger_table["trigger"] and ForTheHorde['sound_on_' .. trigger_table["var_name"]] == 1 ) then
-          PlaySoundFile( "Interface\\AddOns\\ForTheHorde\\bloodlust.mp3" );
+          local buff, duration, expiration, i, doTrigger = nil, nil, nil, 1, false;
+          repeat 
+            buff,_,_,_,_,duration,expiration = UnitBuff("player",i);
+            if ( buff ~= nil ) then
+              if ( duration - (expiration - GetTime()) < 1 ) then
+                doTrigger = true;
+                break;
+              end
+            end
+            i = i + 1;
+          until( buff == nil );
+
+          if doTrigger then
+            if FTH_SND_OVERRIDE ~= nil and FTH_SND_OVERRIDE == 1 then
+              PlaySoundFile( "Interface\\AddOns\\ForTheHorde\\bloodlust.mp3", "Master" );
+            else
+              PlaySoundFile( "Interface\\AddOns\\ForTheHorde\\bloodlust.mp3" );
+            end
+          end
         end
       end
     end
@@ -81,6 +99,23 @@ function ForTheHorde.gvif:OnEvent( event, arg1, arg2, arg3, arg4, arg5, arg6, ar
         createOptions( trigger_table["trigger"], trigger_table["opt_name"], "sound_on_" .. trigger_table["var_name"], 10, y );
         y = y - 30;
       end
+      y = y - 60;
+      -- Sound override
+      local chkbox_override = CreateFrame( "CheckButton","Override_CheckBox_GlobalName", ForTheHorde.gvif, "InterfaceOptionsCheckButtonTemplate" );
+      if FTH_SND_OVERRIDE ~= nil and FTH_SND_OVERRIDE == 1 then
+        chkbox_override:SetChecked(true);
+      end
+      getglobal(chkbox_override:GetName() .. 'Text'):SetText(  L["PLAY_SOUND_OVERRIDE"] );
+      chkbox_override:SetPoint( "TOPLEFT", 10, y);
+      chkbox_override:SetScript( "OnClick", 
+        function() 
+          if FTH_SND_OVERRIDE == nil or FTH_SND_OVERRIDE == 0 then
+            FTH_SND_OVERRIDE = 1;
+          else
+            FTH_SND_OVERRIDE = 0;
+          end
+        end
+      ); 
     end
   elseif event == "PLAYER_ENTERING_WORLD" then
     ForTheHorde["playerGuid"] = UnitGUID("player"); -- Get the player's GUID for comparison

@@ -3,6 +3,6 @@
 ## Notes: Plays the Sylvanas yell of "For the Horde!" from the BfA trailer
 ## Notes-enGB: Plays the Sylvanas yell of "For the Horde!" from the BfA trailer
 ## Author: Imugly (Kennesaw @Area52)
-## SavedVariables: FTH_BL FTH_TW FTH_H FTH_AH FTH_DOF FTH_DOM FTH_NW
+## SavedVariables: FTH_BL FTH_TW FTH_H FTH_AH FTH_DOF FTH_DOM FTH_NW FTH_SND_OVERRIDE
 localization.en.lua
 ForTheHorde.lua
