@@ -1,8 +1,8 @@
-## Interface: 70300
+## Interface: 100002
 ## Title : For the Horde!
 ## Notes: Plays the Sylvanas yell of "For the Horde!" from the BfA trailer
 ## Notes-enGB: Plays the Sylvanas yell of "For the Horde!" from the BfA trailer
 ## Author: Imugly (Kennesaw @Area52)
-## SavedVariables: FTH_BL FTH_TW FTH_H FTH_AH FTH_DOF FTH_DOM FTH_NW FTH_SND_OVERRIDE
+## SavedVariables: FTH_BL FTH_TW FTH_H FTH_AH FTH_DOF FTH_DOM FTH_NW FTH_SND_OVERRIDE FTH_MTS FTH_DM FTH_DDM FTH_FOA
 localization.en.lua
 ForTheHorde.lua
