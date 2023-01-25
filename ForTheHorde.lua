@@ -10,13 +10,17 @@ local gvif_opts,current_opts;
 -- Triggers
 
 local triggers = {
-  { trigger = GetSpellInfo(90355),  var_name = 'ancient_hysteria',      opt_name = "AncientHysteria",    gv = 'FTH_AH',  default = 1 },
-  { trigger = GetSpellInfo(2825),   var_name = 'bloodlust',             opt_name = "Bloodlust",          gv = 'FTH_BL',  default = 1 },
-  { trigger = GetSpellInfo(178207), var_name = 'drums_of_fury',         opt_name = "DrumsOfFury",        gv = 'FTH_DOF', default = 1 },
-  { trigger = GetSpellInfo(230935), var_name = 'drums_of_the_mountain', opt_name = "DrumsOfTheMountain", gv = 'FTH_DOM', default = 1 },
-  { trigger = GetSpellInfo(32182),  var_name = 'heroism',               opt_name = "Heroism",            gv = 'FTH_H',   default = 1 },
-  { trigger = GetSpellInfo(160452), var_name = 'netherwinds',           opt_name = "Netherwinds",        gv = 'FTH_NW',  default = 1 },
-  { trigger = GetSpellInfo(80353),  var_name = 'time_warp',             opt_name = "TimeWarp",           gv = 'FTH_TW',  default = 1 },
+  { trigger = GetSpellInfo(90355),  var_name = 'ancient_hysteria',           opt_name = "AncientHysteria",         gv = 'FTH_AH',  default = 1 },
+  { trigger = GetSpellInfo(2825),   var_name = 'bloodlust',                  opt_name = "Bloodlust",               gv = 'FTH_BL',  default = 1 },
+  { trigger = GetSpellInfo(178207), var_name = 'drums_of_fury',              opt_name = "DrumsOfFury",             gv = 'FTH_DOF', default = 1 },
+  { trigger = GetSpellInfo(230935), var_name = 'drums_of_the_mountain',      opt_name = "DrumsOfTheMountain",      gv = 'FTH_DOM', default = 1 },
+  { trigger = GetSpellInfo(32182),  var_name = 'heroism',                    opt_name = "Heroism",                 gv = 'FTH_H',   default = 1 },
+  { trigger = GetSpellInfo(160452), var_name = 'netherwinds',                opt_name = "Netherwinds",             gv = 'FTH_NW',  default = 1 },
+  { trigger = GetSpellInfo(80353),  var_name = 'time_warp',                  opt_name = "TimeWarp",                gv = 'FTH_TW',  default = 1 },
+  { trigger = GetSpellInfo(292686), var_name = 'mallet_of_thunderous_skins', opt_name = "MalletOfThunderousSkins", gv = 'FTH_MTS', default = 1 },
+  { trigger = GetSpellInfo(256740), var_name = 'drums_of_the_maelstrom',     opt_name = "DrumsOfTheMaelstrom",     gv = 'FTH_DM', default = 1 },
+  { trigger = GetSpellInfo(309658), var_name = 'drums_of_deathly_ferocity',  opt_name = "DrumsOfDeathlyFerocity",  gv = 'FTH_DDM', default = 1 },
+  { trigger = GetSpellInfo(390386), var_name = 'fury_of_the_aspects',        opt_name = "FuryOfTheAspects",        gv = 'FTH_FOA', default = 1 },
 };
 
 -- Main Options Window
