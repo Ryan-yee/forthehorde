@@ -70,7 +70,7 @@ function ForTheHorde.gvif:OnEvent( event, arg1, arg2, arg3, arg4, arg5, arg6, ar
         for _,addedAura in ipairs(addedAuras) do
           for _,trigger_table in ipairs(triggers) do
             if ( addedAura["name"] == trigger_table["trigger"] and ForTheHorde['sound_on_' .. trigger_table["var_name"]] == 1 ) then
-              local buff, duration, expiration, i, doTrigger = nil, nil, nil, 1, false;
+              local auraData, i, doTrigger = nil, 1, false;
               repeat 
                 auraData = C_UnitAuras.GetBuffDataByIndex("player",i);
 		if auraData ~= nil then
@@ -80,7 +80,7 @@ function ForTheHorde.gvif:OnEvent( event, arg1, arg2, arg3, arg4, arg5, arg6, ar
                   end
                 end
                 i = i + 1;
-              until( buff == nil );
+              until( auraData == nil );
 
               if doTrigger then
                 if FTH_SND_OVERRIDE ~= nil and FTH_SND_OVERRIDE == 1 then
