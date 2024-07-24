@@ -18,7 +18,7 @@ local triggers = {
   { trigger = GetSpellInfo(160452), var_name = 'netherwinds',                opt_name = "Netherwinds",             gv = 'FTH_NW',  default = 1 },
   { trigger = GetSpellInfo(80353),  var_name = 'time_warp',                  opt_name = "TimeWarp",                gv = 'FTH_TW',  default = 1 },
   { trigger = GetSpellInfo(292686), var_name = 'mallet_of_thunderous_skins', opt_name = "MalletOfThunderousSkins", gv = 'FTH_MTS', default = 1 },
-  { trigger = GetSpellInfo(256740), var_name = 'drums_of_the_maelstrom',     opt_name = "DrumsOfTheMaelstrom",     gv = 'FTH_DM', default = 1 },
+  { trigger = GetSpellInfo(256740), var_name = 'drums_of_the_maelstrom',     opt_name = "DrumsOfTheMaelstrom",     gv = 'FTH_DM',  default = 1 },
   { trigger = GetSpellInfo(309658), var_name = 'drums_of_deathly_ferocity',  opt_name = "DrumsOfDeathlyFerocity",  gv = 'FTH_DDM', default = 1 },
   { trigger = GetSpellInfo(390386), var_name = 'fury_of_the_aspects',        opt_name = "FuryOfTheAspects",        gv = 'FTH_FOA', default = 1 },
 };
@@ -60,31 +60,38 @@ ForTheHorde.gvif:RegisterEvent("ADDON_LOADED");
 ForTheHorde.gvif:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 ForTheHorde.gvif:RegisterEvent("PLAYER_ENTERING_WORLD");
 ForTheHorde.gvif:RegisterEvent("PLAYER_LOGOUT");
+ForTheHorde.gvif:RegisterEvent("UNIT_AURA");
 
 function ForTheHorde.gvif:OnEvent( event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13 ) 
-  if ( event == "COMBAT_LOG_EVENT_UNFILTERED" ) then
-    if ( arg8 ~= nil and arg8 == ForTheHorde["playerGuid"] and arg2 ~= nil and arg2 == "SPELL_AURA_APPLIED" and arg13 ~= nil ) then
-      for _,trigger_table in ipairs(triggers) do
-        if ( arg13 == trigger_table["trigger"] and ForTheHorde['sound_on_' .. trigger_table["var_name"]] == 1 ) then
-          local buff, duration, expiration, i, doTrigger = nil, nil, nil, 1, false;
-          repeat 
-            buff,_,_,_,_,duration,expiration = UnitBuff("player",i);
-            if ( buff ~= nil ) then
-              if ( duration - (expiration - GetTime()) < 1 ) then
-                doTrigger = true;
-                break;
+  if ( event == "UNIT_AURA" ) then
+    if arg1 == "player" and arg2 ~= nil then 
+      addedAuras = arg2["addedAuras"];
+      if addedAuras ~= nil then
+        for _,addedAura in ipairs(addedAuras) do
+          for _,trigger_table in ipairs(triggers) do
+            if ( addedAura["name"] == trigger_table["trigger"] and ForTheHorde['sound_on_' .. trigger_table["var_name"]] == 1 ) then
+              local buff, duration, expiration, i, doTrigger = nil, nil, nil, 1, false;
+              repeat 
+                auraData = C_UnitAuras.GetBuffDataByIndex("player",i);
+		if auraData ~= nil then
+                  if ( auraData["name"] == trigger_table["trigger"] and auraData["duration"] - (auraData["expirationTime"] - GetTime()) < 1 ) then
+                    doTrigger = true;
+                    break 
+                  end
+                end
+                i = i + 1;
+              until( buff == nil );
+
+              if doTrigger then
+                if FTH_SND_OVERRIDE ~= nil and FTH_SND_OVERRIDE == 1 then
+                  PlaySoundFile( "Interface\\AddOns\\ForTheHorde\\bloodlust.mp3", "Master" );
+                else
+                  PlaySoundFile( "Interface\\AddOns\\ForTheHorde\\bloodlust.mp3" );
+                end
+		return
               end
             end
-            i = i + 1;
-          until( buff == nil );
-
-          if doTrigger then
-            if FTH_SND_OVERRIDE ~= nil and FTH_SND_OVERRIDE == 1 then
-              PlaySoundFile( "Interface\\AddOns\\ForTheHorde\\bloodlust.mp3", "Master" );
-            else
-              PlaySoundFile( "Interface\\AddOns\\ForTheHorde\\bloodlust.mp3" );
-            end
-          end
+	  end
         end
       end
     end
@@ -97,7 +104,9 @@ function ForTheHorde.gvif:OnEvent( event, arg1, arg2, arg3, arg4, arg5, arg6, ar
           ForTheHorde['sound_on_' .. trigger_table["var_name"]] = trigger_table["default"];
         end
       end
-      InterfaceOptions_AddCategory(ForTheHorde.gvif);
+      Settings.RegisterAddOnCategory(Settings.RegisterCanvasLayoutCategory(ForTheHorde.gvif, "For The Horde"));
+
+      --InterfaceOptions_AddCategory(ForTheHorde.gvif);
       local y = -40;
       for _,trigger_table in ipairs(triggers) do
         createOptions( trigger_table["trigger"], trigger_table["opt_name"], "sound_on_" .. trigger_table["var_name"], 10, y );
