@@ -22,6 +22,7 @@ local triggers = {
   { trigger = C_Spell.GetSpellName(309658), spellId = 309658, var_name = 'drums_of_deathly_ferocity',  opt_name = "DrumsOfDeathlyFerocity",  gv = 'FTH_DDM', default = 1 },
   { trigger = C_Spell.GetSpellName(390386), spellId = 390386, var_name = 'fury_of_the_aspects',        opt_name = "FuryOfTheAspects",        gv = 'FTH_FOA', default = 1 },
   { trigger = C_Spell.GetSpellName(264667), spellId = 264667, var_name = "primal_rage",                opt_name = "PrimalRage",              gv = 'FTH_PR',  default = 1 },
+  { trigger = C_Spell.GetSpellName(383243), spellId = 342242, var_name = "time_anomaly",               opt_name = "TimeAnomaly",             gv = 'FTH_TA',  default = 1 },
 };
 
 -- Main Options Window
@@ -58,7 +59,6 @@ end
 
 -- Register events that we listen for
 ForTheHorde.gvif:RegisterEvent("ADDON_LOADED");
-ForTheHorde.gvif:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 ForTheHorde.gvif:RegisterEvent("PLAYER_ENTERING_WORLD");
 ForTheHorde.gvif:RegisterEvent("PLAYER_LOGOUT");
 ForTheHorde.gvif:RegisterEvent("UNIT_AURA");
@@ -76,10 +76,7 @@ function ForTheHorde.gvif:OnEvent( event, arg1, arg2, arg3, arg4, arg5, arg6, ar
                 auraData = C_UnitAuras.GetBuffDataByIndex("player",i);
 		if auraData ~= nil then
                   if ( auraData["spellId"] == trigger_table["spellId"] and auraData["duration"] - (auraData["expirationTime"] - GetTime()) < 1 ) then
-	            -- Check for Time Anomaly (8 second trigger)
-		    if ForTheHorde["sound_on_time_anomaly"] == 1 or auraData["duration"] > 6 or addedAura["name"] ~= C_Spell.GetSpellName(80353) then
                       doTrigger = true;
-		    end
                     break 
                   end
                 end
@@ -108,12 +105,6 @@ function ForTheHorde.gvif:OnEvent( event, arg1, arg2, arg3, arg4, arg5, arg6, ar
           ForTheHorde['sound_on_' .. trigger_table["var_name"]] = trigger_table["default"];
         end
       end
-      -- Time Anomaly
-      if _G["FTH_TA"] ~= nil then
-        ForTheHorde['sound_on_time_anomaly'] = _G["FTH_TA"]
-      else
-	ForTheHorde['sound_on_time_anomaly'] = 0
-      end
 
       Settings.RegisterAddOnCategory(Settings.RegisterCanvasLayoutCategory(ForTheHorde.gvif, "For The Horde"));
 
@@ -124,13 +115,7 @@ function ForTheHorde.gvif:OnEvent( event, arg1, arg2, arg3, arg4, arg5, arg6, ar
         y = y - 30;
       end
       
-      -- Time Anomaly (Mage Talent)
-      local taCheckBox = createOptions(C_Spell.GetSpellName(383243), "TimeAnomaly", "sound_on_time_anomaly", 10, y);
-      if ForTheHorde["sound_on_time_anomaly"] == 1 then
-        taCheckBox:SetChecked(true)
-      end
 
-      y = y - 30;
       y = y - 60;
       -- Sound override
       local chkbox_override = CreateFrame( "CheckButton","Override_CheckBox_GlobalName", ForTheHorde.gvif, "InterfaceOptionsCheckButtonTemplate" );
@@ -155,7 +140,6 @@ function ForTheHorde.gvif:OnEvent( event, arg1, arg2, arg3, arg4, arg5, arg6, ar
     for _,trigger_table in ipairs(triggers) do
       _G[trigger_table["gv"]] = ForTheHorde['sound_on_' .. trigger_table["var_name"]];
     end
-    _G["FTH_TA"] = ForTheHorde["sound_on_time_anomaly"]
   end
 end
 ForTheHorde.gvif:SetScript("OnEvent",ForTheHorde.gvif.OnEvent);
